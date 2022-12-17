@@ -3,5 +3,5 @@ A simple [React Native](https://reactnative.dev/) note app where you can store a
 
 #### You can ####
 * Add your horse
-* Leave a note for your horse in a calendar
+* Leave notes for your horses in a calendar
 * Share the note with someone (Could be an employee)
