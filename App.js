@@ -3,6 +3,7 @@ import HorsesScreen from "./src/screens/HorsesScreen";
 import AddHorseScreen from "./src/screens/AddHorseScreen";
 import HorseCalendarScreen from "./src/screens/HorseCalendarScreen";
 import HorseNoteScreen from "./src/screens/HorseNoteScreen";
+import NewNoteCalendarScreen from "./src/screens/NewNoteCalendarScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SQLite from "expo-sqlite";
@@ -49,6 +50,10 @@ export default function App() {
                     component={HorseCalendarScreen}
                 />
                 <Stack.Screen name="HorseNote" component={HorseNoteScreen} />
+                <Stack.Screen
+                    name="NewNoteCalendar"
+                    component={NewNoteCalendarScreen}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
