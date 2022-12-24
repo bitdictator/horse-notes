@@ -86,10 +86,9 @@ const NewNoteCalendarScreen = ({ navigation, route }) => {
                     //maxDate={"2012-05-30"}
                     // Handler which gets executed on day press. Default = undefined
                     onDayPress={(day) => {
-                        // navigation.navigate("HorseNote", {
-                        //     horseId: horseId,
-                        //     noteDate: day.dateString,
-                        // });
+                        navigation.navigate("NewNote", {
+                            noteDate: day.dateString,
+                        });
                     }}
                     // Handler which gets executed on day long press. Default = undefined
                     // onDayLongPress={(day) => {
