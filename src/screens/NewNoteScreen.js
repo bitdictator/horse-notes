@@ -6,7 +6,6 @@ import {
     StatusBar,
     TextInput,
     ScrollView,
-    FlatList,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
@@ -22,6 +21,16 @@ const NewNoteScreen = ({ navigation }) => {
     const [checkedHorses, setCheckedHorses] = useState([]);
     const [note, setNote] = useState("");
     const isFocused = useIsFocused();
+
+    const handleToggleCheckedHorse = (id, name) => {
+        // if object found then delete
+        if (checkedHorses.find((obj) => obj.id === id)) {
+            setCheckedHorses(checkedHorses.filter((item) => item.id !== id));
+        } else {
+            // else add
+            setCheckedHorses([...checkedHorses, { id: id, name: name }]);
+        }
+    };
 
     useEffect(() => {
         if (isFocused) {
@@ -42,9 +51,11 @@ const NewNoteScreen = ({ navigation }) => {
     }, [isFocused]);
 
     const handleSaveAndSendNote = () => {
-        // save after the message was sent
+        // share note
 
-        // go back to horses page
+        // save note
+
+        // got to horses screen
         navigation.pop(2);
     };
 
@@ -58,25 +69,51 @@ const NewNoteScreen = ({ navigation }) => {
                 />
                 <Text style={styles.headerTitle}>Νέα Σημείωση</Text>
             </View>
-            <HorseCheckbox text={"test horse"} />
-            <ScrollView
-                style={styles.editNoteForm}
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{ flex: 1 }}
-            >
-                <TextInput
-                    style={styles.noteInput}
-                    multiline={true}
-                    autoComplete="off"
-                    autoCorrect={false}
-                    autoFocus={false}
-                    placeholder="Πληκτρολογήστε μια σημείωση"
-                    selectionColor="#06f"
-                    placeholderTextColor="#464646"
-                    maxLength={1000}
-                    value={note}
-                    onChangeText={setNote}
-                />
+            <ScrollView style={{ flex: 1 }}>
+                <ScrollView
+                    style={styles.horseCheckboxesContainer}
+                    contentContainerStyle={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        paddingTop: 36,
+                        width: "300%",
+                        paddingBottom: 26,
+                        paddingHorizontal: 12,
+                    }}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {horses.map(({ id, name }) => (
+                        <View style={{ marginRight: 10, marginBottom: 10 }}>
+                            <HorseCheckbox
+                                text={name}
+                                onPress={() => {
+                                    handleToggleCheckedHorse(id, name);
+                                }}
+                            />
+                        </View>
+                    ))}
+                </ScrollView>
+                <ScrollView
+                    style={styles.editNoteForm}
+                    keyboardShouldPersistTaps="handled"
+                    contentContainerStyle={{ flex: 1 }}
+                >
+                    <TextInput
+                        style={styles.noteInput}
+                        multiline={true}
+                        autoComplete="off"
+                        autoCorrect={false}
+                        autoFocus={false}
+                        placeholder="Πληκτρολογήστε μια σημείωση"
+                        selectionColor="#06f"
+                        placeholderTextColor="#464646"
+                        maxLength={1000}
+                        value={note}
+                        onChangeText={setNote}
+                    />
+                </ScrollView>
             </ScrollView>
             <View style={styles.footer}>
                 <BlueButton
@@ -115,16 +152,14 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
     },
-    horseCheckboxesList: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        backgroundColor: "#ffffff",
+    horseCheckboxesContainer: {
+        flexGrow: 0,
     },
     editNoteForm: {
         flex: 1,
         width: "100%",
-        paddingTop: 36,
-        padding: 18,
+        padding: 12,
+        paddingTop: 0,
     },
     footer: {
         width: "100%",
@@ -136,7 +171,7 @@ const styles = StyleSheet.create({
         width: "100%",
         borderWidth: 1,
         backgroundColor: "rgba(255, 255, 255, 0.04)",
-        fontSize: 18,
+        fontSize: 16,
         color: "#fff",
         borderColor: "rgba(255, 255, 255, 0.04)",
         borderRadius: 12,

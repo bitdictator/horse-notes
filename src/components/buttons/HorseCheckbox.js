@@ -11,7 +11,10 @@ const HorseCheckbox = (props) => {
             onPressOut={() => {
                 setIsPressed(false);
             }}
-            onPress={() => setIsChecked(!isChecked)}
+            onPress={() => {
+                setIsChecked(!isChecked);
+                props.onPress();
+            }}
             activeOpacity={1}
             underlayColor="#1c1c1c"
             style={
@@ -45,10 +48,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     buttonChecked: {
-        backgroundColor: "#06f",
+        backgroundColor: "rgba(255, 255, 255, 0.04)",
         borderRadius: 12,
-        paddingHorizontal: 9,
-        paddingVertical: 3,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderColor: "#39d353",
+        borderWidth: 1,
     },
     buttonText: {
         color: "#fff",

@@ -5,7 +5,7 @@ import HorseCalendarScreen from "./src/screens/HorseCalendarScreen";
 import HorseNoteScreen from "./src/screens/HorseNoteScreen";
 import NewNoteCalendarScreen from "./src/screens/NewNoteCalendarScreen";
 import NewNoteScreen from "./src/screens/NewNoteScreen";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SQLite from "expo-sqlite";
 

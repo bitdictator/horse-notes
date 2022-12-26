@@ -100,6 +100,7 @@ const HorseNoteScreen = ({ navigation, route }) => {
                     style={styles.noteInput}
                     multiline={true}
                     autoComplete="off"
+                    maxHeight={300}
                     autoCorrect={false}
                     autoFocus={false}
                     placeholder="Πληκτρολογήστε μια σημείωση"
