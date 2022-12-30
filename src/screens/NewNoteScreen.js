@@ -16,7 +16,8 @@ import HorseCheckbox from "../components/buttons/HorseCheckbox";
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
 
-const NewNoteScreen = ({ navigation }) => {
+const NewNoteScreen = ({ navigation, route }) => {
+    const noteDate = route.params.noteDate;
     const [horses, setHorses] = useState([]);
     const [checkedHorses, setCheckedHorses] = useState([]);
     const [note, setNote] = useState("");
@@ -30,6 +31,24 @@ const NewNoteScreen = ({ navigation }) => {
             // else add
             setCheckedHorses([...checkedHorses, { id: id, name: name }]);
         }
+    };
+
+    const handleSaveAndSendNote = async () => {
+        // CUNSTRUCT NOTE
+        let formattedNote = "";
+
+        // add date
+        formattedNote = "📅 " + noteDate + "\n";
+
+        // add horses
+        let horseNames = horses.map((horse) => horse.name);
+        horseNames = horseNames.join(" • ");
+        formattedNote = formattedNote + "🐴 " + horseNames + "\n";
+
+        // add note
+        formattedNote = formattedNote + "📝 " + note;
+
+        // SHARE NOTE
     };
 
     useEffect(() => {
@@ -47,17 +66,9 @@ const NewNoteScreen = ({ navigation }) => {
                     (txObj, error) => console.log("Failed query ", error)
                 );
             });
+            handleSaveAndSendNote();
         }
     }, [isFocused]);
-
-    const handleSaveAndSendNote = () => {
-        // share note
-
-        // save note
-
-        // got to horses screen
-        navigation.pop(2);
-    };
 
     return (
         <View style={styles.container}>
@@ -104,6 +115,7 @@ const NewNoteScreen = ({ navigation }) => {
                         style={styles.noteInput}
                         multiline={true}
                         autoComplete="off"
+                        maxHeight={200}
                         autoCorrect={false}
                         autoFocus={false}
                         placeholder="Πληκτρολογήστε μια σημείωση"
@@ -169,6 +181,7 @@ const styles = StyleSheet.create({
     },
     noteInput: {
         width: "100%",
+        maxWidth: "100%",
         borderWidth: 1,
         backgroundColor: "rgba(255, 255, 255, 0.04)",
         fontSize: 16,
