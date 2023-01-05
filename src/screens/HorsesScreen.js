@@ -4,6 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
 import HorseCard from "../components/cards/HorseCard";
+import BlueButton from "../components/buttons/BlueButton";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -18,7 +19,6 @@ const HorsesScreen = ({ navigation }) => {
             onPress={() => {
                 navigation.navigate("HorseCalendar", {
                     horseId: item.id,
-                    horseName: item.name,
                 });
             }}
         />
@@ -60,6 +60,12 @@ const HorsesScreen = ({ navigation }) => {
                 contentContainerStyle={{ paddingVertical: 36 }}
                 ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
             ></FlatList>
+            <View style={styles.footer}>
+                <BlueButton
+                    onPress={() => navigation.navigate("NewNoteCalendar")}
+                    buttonText="Νέα Σημείωση"
+                />
+            </View>
         </View>
     );
 };
@@ -92,6 +98,12 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         paddingHorizontal: 12,
+    },
+    footer: {
+        width: "100%",
+        padding: 18,
+        borderTopWidth: 1,
+        borderTopColor: DIVIDER_COLOR,
     },
 });
 

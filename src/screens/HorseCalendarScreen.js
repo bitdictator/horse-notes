@@ -61,7 +61,7 @@ LocaleConfig.defaultLocale = "gr";
 
 const HorseCalendarScreen = ({ navigation, route }) => {
     const horseId = route.params.horseId;
-    const horseName = route.params.horseName;
+    const [horseName, setHorseName] = useState("");
     const [currentCalendarDate, setCurrentCalendarDate] = useState(
         moment().format("YYYY-MM-DD")
     );
@@ -116,8 +116,28 @@ const HorseCalendarScreen = ({ navigation, route }) => {
         });
     };
 
+    const getHorseName = () => {
+        const db = SQLite.openDatabase("thomas-horse-notes.db");
+        // get horses
+        db.transaction((tx) => {
+            tx.executeSql(
+                "SELECT name FROM horse WHERE id=? LIMIT 1",
+                [horseId],
+                (txObj, resultSet) => {
+                    setHorseName(resultSet.rows._array[0].name);
+                    console.log(
+                        "Successful query: SELECT name FROM horse WHERE id=?"
+                    );
+                },
+                (txObj, error) => console.log("Failed query ", error)
+            );
+        });
+    };
+
     useEffect(() => {
         if (isFocused) {
+            getHorseName();
+
             updateMarkedDates(currentCalendarDate);
         }
     }, [isFocused]);
@@ -126,8 +146,17 @@ const HorseCalendarScreen = ({ navigation, route }) => {
         <View style={styles.container}>
             <StatusBar style="light" backgroundColor={APP_BACKGROUND_COLOR} />
             <View style={styles.header}>
-                <GoBackButton onPress={navigation.goBack} />
+                <GoBackButton onPress={() => navigation.goBack()} />
                 <Text style={styles.headerTitle}>{horseName}</Text>
+                <TextButton
+                    buttonText={"Επεξ..."}
+                    onPress={() => {
+                        navigation.navigate("EditHorse", {
+                            horseId: horseId,
+                            horseName: horseName,
+                        });
+                    }}
+                />
             </View>
             <View style={styles.pageContentWrapper}>
                 <Calendar
@@ -235,6 +264,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
+        justifyContent: "space-between",
         height: 60,
         padding: 12,
         backgroundColor: "transparent",
