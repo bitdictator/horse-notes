@@ -6,6 +6,7 @@ import {
     StatusBar,
     TextInput,
     ScrollView,
+    Share,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
@@ -15,6 +16,7 @@ import HorseCheckbox from "../components/buttons/HorseCheckbox";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
+const db = SQLite.openDatabase("thomas-horse-notes.db");
 
 const NewNoteScreen = ({ navigation, route }) => {
     const noteDate = route.params.noteDate;
@@ -33,7 +35,61 @@ const NewNoteScreen = ({ navigation, route }) => {
         }
     };
 
-    const handleSaveAndSendNote = async () => {
+    const handleSaveNote = () => {
+        if (note.length < 1) {
+            return;
+        }
+
+        checkedHorses.map((horse) => {
+            // check this horse already has a note record and update
+            // if not then insert
+            db.transaction((tx) => {
+                tx.executeSql(
+                    "SELECT * FROM note WHERE horse_id=? AND date=? LIMIT 1",
+                    [horse.id, noteDate],
+                    (txObj, resultSet) => {
+                        // if record exists the update, else insert
+                        if (resultSet.rows.length > 0) {
+                            db.transaction((tx) => {
+                                tx.executeSql(
+                                    "UPDATE note SET note = note || ? WHERE horse_id=? AND date=?;",
+                                    ["\n" + note, horse.id, noteDate],
+                                    (txObj, resultSet) => {
+                                        console.log("Successful note update.");
+                                    },
+                                    (txObj, error) => {
+                                        console.log("Failed to update note: ");
+                                    }
+                                );
+                            });
+                        } else {
+                            db.transaction((tx) => {
+                                tx.executeSql(
+                                    "INSERT INTO note (horse_id, date, note) VALUES (?, ?, ?);",
+                                    [horse.id, noteDate, note],
+                                    (txObj, resultSet) => {
+                                        console.log("Successful note insert.");
+                                    },
+                                    (txObj, error) => {
+                                        console.log("Failed to insert note: ");
+                                    }
+                                );
+                            });
+                        }
+                    },
+                    (txObj, error) => console.log("Failed query ", error)
+                );
+            });
+        });
+
+        navigation.goBack();
+    };
+
+    const handleShareNote = async () => {
+        if (note.length < 1) {
+            return;
+        }
+
         // CUNSTRUCT NOTE
         let formattedNote = "";
 
@@ -41,7 +97,7 @@ const NewNoteScreen = ({ navigation, route }) => {
         formattedNote = "📅 " + noteDate + "\n";
 
         // add horses
-        let horseNames = horses.map((horse) => horse.name);
+        let horseNames = checkedHorses.map((horse) => horse.name);
         horseNames = horseNames.join(" • ");
         formattedNote = formattedNote + "🐴 " + horseNames + "\n";
 
@@ -49,6 +105,21 @@ const NewNoteScreen = ({ navigation, route }) => {
         formattedNote = formattedNote + "📝 " + note;
 
         // SHARE NOTE
+        try {
+            const result = await Share.share({
+                message: formattedNote,
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -66,7 +137,6 @@ const NewNoteScreen = ({ navigation, route }) => {
                     (txObj, error) => console.log("Failed query ", error)
                 );
             });
-            handleSaveAndSendNote();
         }
     }, [isFocused]);
 
@@ -128,10 +198,27 @@ const NewNoteScreen = ({ navigation, route }) => {
                 </ScrollView>
             </ScrollView>
             <View style={styles.footer}>
-                <BlueButton
-                    onPress={handleSaveAndSendNote}
-                    buttonText="Αποστολή και Αποθήκευση"
-                />
+                <View
+                    style={{
+                        flex: 1,
+                    }}
+                >
+                    <BlueButton
+                        onPress={handleSaveNote}
+                        buttonText="Αποθήκευση"
+                    />
+                </View>
+                <View
+                    style={{
+                        marginLeft: 18,
+                        flex: 1,
+                    }}
+                >
+                    <BlueButton
+                        onPress={handleShareNote}
+                        buttonText="Αποστολή"
+                    />
+                </View>
             </View>
         </View>
     );
@@ -174,6 +261,8 @@ const styles = StyleSheet.create({
         paddingTop: 0,
     },
     footer: {
+        display: "flex",
+        flexDirection: "row",
         width: "100%",
         padding: 18,
         borderTopWidth: 1,

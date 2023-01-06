@@ -6,6 +6,7 @@ import {
     StatusBar,
     TextInput,
     ScrollView,
+    Share,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
@@ -81,6 +82,24 @@ const HorseNoteScreen = ({ navigation, route }) => {
         navigation.goBack();
     };
 
+    const handleShareNote = async () => {
+        try {
+            const result = await Share.share({
+                message: note,
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {}
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar style="light" backgroundColor={APP_BACKGROUND_COLOR} />
@@ -112,7 +131,27 @@ const HorseNoteScreen = ({ navigation, route }) => {
                 />
             </ScrollView>
             <View style={styles.footer}>
-                <BlueButton onPress={handleSaveNote} buttonText="Αποθήκευση" />
+                <View
+                    style={{
+                        flex: 1,
+                    }}
+                >
+                    <BlueButton
+                        onPress={handleSaveNote}
+                        buttonText="Αποθήκευση"
+                    />
+                </View>
+                <View
+                    style={{
+                        marginLeft: 18,
+                        flex: 1,
+                    }}
+                >
+                    <BlueButton
+                        onPress={handleShareNote}
+                        buttonText="Αποστολή"
+                    />
+                </View>
             </View>
         </View>
     );
@@ -152,6 +191,8 @@ const styles = StyleSheet.create({
         padding: 18,
     },
     footer: {
+        display: "flex",
+        flexDirection: "row",
         width: "100%",
         padding: 18,
         borderTopWidth: 1,
