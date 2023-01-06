@@ -61,7 +61,10 @@ const HorsesScreen = ({ navigation }) => {
                 ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
             ></FlatList>
             <View style={styles.footer}>
-                <BlueButton onPress={() => {}} buttonText="Νέα Σημείωση" />
+                <BlueButton
+                    onPress={() => navigation.navigate("NewNoteCalendar")}
+                    buttonText="Νέα Σημείωση"
+                />
             </View>
         </View>
     );
