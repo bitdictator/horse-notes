@@ -6,10 +6,13 @@ import {
     StatusBar,
     TextInput,
     ScrollView,
+    Image,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
+import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
+import * as ImagePicker from "expo-image-picker";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -17,26 +20,58 @@ const db = SQLite.openDatabase("thomas-horse-notes.db");
 
 const AddHorseScreen = ({ navigation }) => {
     const [horseName, setHorseName] = useState("");
+    const [image, setImage] = useState(null);
 
-    const handleSave = () => {
+    const handleSelectImageFromCamera = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            allowsMultipleSelection: false,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+    const handleSelectImageFromGallery = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            allowsMultipleSelection: false,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
+    const saveImage = async () => {};
+
+    const handleSave = async () => {
         // validate horse name, must be less than 18 characters and more than 0
         if (horseName.length < 1 || horseName.length > 18) {
             return;
         }
 
+        // save record to
         db.transaction((tx) => {
             tx.executeSql(
                 "INSERT INTO horse (name) VALUES (?);",
                 [horseName],
                 (txObj, resultSet) => {
                     console.log("Successful horse insert.");
-                    navigation.goBack();
                 },
                 (txObj, error) => {
                     console.log("Failed to insert horse: ");
                 }
             );
         });
+
+        saveImage();
+
+        navigation.goBack();
     };
 
     return (
@@ -50,6 +85,47 @@ const AddHorseScreen = ({ navigation }) => {
                 style={styles.addHorseForm}
                 keyboardShouldPersistTaps="handled"
             >
+                <Text style={{ fontSize: 18, color: "#fff", marginBottom: 4 }}>
+                    Φωτογραφία
+                </Text>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 10,
+                    }}
+                >
+                    <View style={styles.horseImageWrapper}>
+                        {image ? (
+                            <Image
+                                style={styles.horseImage}
+                                source={{ uri: image }}
+                            />
+                        ) : (
+                            <Image
+                                style={styles.horseImage}
+                                source={require("../../assets/image_icon_outline.png")}
+                            />
+                        )}
+                    </View>
+                    <View
+                        style={{
+                            flex: 1,
+                            marginLeft: 10,
+                            justifyContent: "space-evenly",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <TextButton
+                            buttonText="Προσθήκη απο κάμερα"
+                            onPress={handleSelectImageFromCamera}
+                        />
+                        <TextButton
+                            buttonText="Προσθήκη απο συλλογή"
+                            onPress={handleSelectImageFromGallery}
+                        />
+                    </View>
+                </View>
                 <TextInput
                     style={styles.textInput}
                     value={horseName}
@@ -118,6 +194,23 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 4,
         paddingHorizontal: 12,
+    },
+    horseImageWrapper: {
+        height: 100,
+        width: 100,
+        justifyContent: "center",
+        textAlign: "center",
+        borderRadius: 12,
+        alignItems: "center",
+        padding: 4,
+        borderWidth: 1,
+        borderColor: "rgba(255, 255, 255, 0.1)",
+    },
+    horseImage: {
+        height: "100%",
+        width: "100%",
+        resizeMode: "cover",
+        borderRadius: 8,
     },
 });
 
