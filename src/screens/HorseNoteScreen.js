@@ -19,6 +19,7 @@ const db = SQLite.openDatabase("thomas-horse-notes.db");
 const HorseNoteScreen = ({ navigation, route }) => {
     const horseId = route.params.horseId;
     const noteDate = route.params.noteDate;
+    const horseName = route.params.horseName;
     const [note, setNote] = useState("");
     const [recordExists, setRecordExists] = useState(false);
 
@@ -83,9 +84,49 @@ const HorseNoteScreen = ({ navigation, route }) => {
     };
 
     const handleShareNote = async () => {
+        if (note.length < 1) {
+            return;
+        }
+
+        // CUNSTRUCT NOTE
+        let formattedNote = "";
+
+        let dateParts = noteDate.split("-");
+
+        const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+
+        // add date
+        formattedNote =
+            "📅 " +
+            parseInt(dateParts[2]) +
+            " " +
+            monthNames[parseInt(dateParts[1]) - 1] +
+            " " +
+            dateParts[0] +
+            "\n";
+
+        // add horse
+        formattedNote = formattedNote + "🐴 " + horseName + "\n";
+
+        // add note
+        formattedNote = formattedNote + "📝 " + note;
+
         try {
             const result = await Share.share({
-                message: note,
+                message: formattedNote,
             });
 
             if (result.action === Share.sharedAction) {

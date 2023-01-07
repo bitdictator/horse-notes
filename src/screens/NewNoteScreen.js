@@ -40,6 +40,10 @@ const NewNoteScreen = ({ navigation, route }) => {
             return;
         }
 
+        if (checkedHorses.length < 1) {
+            return;
+        }
+
         checkedHorses.map((horse) => {
             // check this horse already has a note record and update
             // if not then insert
@@ -90,11 +94,39 @@ const NewNoteScreen = ({ navigation, route }) => {
             return;
         }
 
+        if (checkedHorses.length < 1) {
+            return;
+        }
+
         // CUNSTRUCT NOTE
         let formattedNote = "";
 
+        let dateParts = noteDate.split("-");
+
+        const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+
         // add date
-        formattedNote = "📅 " + noteDate + "\n";
+        formattedNote =
+            "📅 " +
+            parseInt(dateParts[2]) +
+            " " +
+            monthNames[parseInt(dateParts[1]) - 1] +
+            " " +
+            dateParts[0] +
+            "\n";
 
         // add horses
         let horseNames = checkedHorses.map((horse) => horse.name);

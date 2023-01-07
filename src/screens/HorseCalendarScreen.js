@@ -172,6 +172,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
                         navigation.navigate("HorseNote", {
                             horseId: horseId,
                             noteDate: day.dateString,
+                            horseName: horseName,
                         });
                     }}
                     // Handler which gets executed on day long press. Default = undefined
