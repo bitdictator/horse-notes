@@ -19,7 +19,7 @@ export default function App() {
     db.transaction((tx) => {
         // init horse table
         tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS horse (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)",
+            "CREATE TABLE IF NOT EXISTS horse (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, image TEXT NOT NULL)",
             [],
             (txObj, resulSet) => console.log("Created 'horse' table."),
             (txObj, error) =>

@@ -14,7 +14,10 @@ const HorseCard = (props) => {
             underlayColor="#1c1c1c"
             style={isPressed ? styles.buttonPressed : styles.button}
         >
-            <Image style={styles.horseImg} source={""} />
+            <Image
+                style={styles.horseImg}
+                source={{ uri: props.imageSource }}
+            />
             <Text style={styles.buttonText}>{props.horseName}</Text>
         </Pressable>
     );
@@ -60,6 +63,8 @@ const styles = StyleSheet.create({
         height: 58,
         width: 58,
         borderRadius: 6,
+        borderWidth: 1,
+        borderColor: "rgba(255, 255, 255, 0.4)",
     },
 });
 

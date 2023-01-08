@@ -21,6 +21,7 @@ const HorsesScreen = ({ navigation }) => {
                     horseId: item.id,
                 });
             }}
+            imageSource={item.image}
         />
     );
 

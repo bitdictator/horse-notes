@@ -13,6 +13,7 @@ import GoBackButton from "../components/buttons/GoBackButton";
 import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -47,7 +48,26 @@ const AddHorseScreen = ({ navigation }) => {
         }
     };
 
-    const saveImage = async () => {};
+    async function ensureDirExists() {
+        try {
+            await FileSystem.makeDirectoryAsync(
+                FileSystem.documentDirectory + "horse-images"
+            );
+        } catch (error) {}
+
+        return true;
+    }
+
+    const saveImage = async () => {
+        ensureDirExists();
+
+        try {
+            await FileSystem.copyAsync({
+                from: image,
+                to: FileSystem.documentDirectory + "horse-images/",
+            });
+        } catch (error) {}
+    };
 
     const handleSave = async () => {
         // validate horse name, must be less than 18 characters and more than 0
@@ -58,8 +78,8 @@ const AddHorseScreen = ({ navigation }) => {
         // save record to
         db.transaction((tx) => {
             tx.executeSql(
-                "INSERT INTO horse (name) VALUES (?);",
-                [horseName],
+                "INSERT INTO horse (name, image) VALUES (?, ?);",
+                [horseName, image],
                 (txObj, resultSet) => {
                     console.log("Successful horse insert.");
                 },

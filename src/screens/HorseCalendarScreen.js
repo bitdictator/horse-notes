@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, StatusBar, FlatList } from "react-native";
+import { View, Text, StyleSheet, StatusBar } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import TextButton from "../components/buttons/TextButton";
 import GoBackButton from "../components/buttons/GoBackButton";
-import {
-    Calendar,
-    CalendarList,
-    Agenda,
-    LocaleConfig,
-} from "react-native-calendars";
-import Moment from "react-moment";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 import * as SQLite from "expo-sqlite";
 import moment from "moment";
 
