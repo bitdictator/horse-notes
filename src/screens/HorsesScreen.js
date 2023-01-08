@@ -19,6 +19,7 @@ const HorsesScreen = ({ navigation }) => {
             onPress={() => {
                 navigation.navigate("HorseCalendar", {
                     horseId: item.id,
+                    horseImage: item.image,
                 });
             }}
             imageSource={item.image}

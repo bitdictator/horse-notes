@@ -6,10 +6,14 @@ import {
     StatusBar,
     TextInput,
     ScrollView,
+    Image,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
+import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -18,6 +22,33 @@ const db = SQLite.openDatabase("thomas-horse-notes.db");
 const EditHorseScreen = ({ navigation, route }) => {
     const [horseName, setHorseName] = useState(route.params.horseName);
     const horseId = route.params.horseId;
+    const [image, setImage] = useState(route.params.horseImage);
+
+    const handleSelectImageFromCamera = async () => {
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            allowsMultipleSelection: false,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+    const handleSelectImageFromGallery = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            allowsMultipleSelection: false,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
+
     const handleSave = () => {
         // validate horse name, must be less than 18 characters and more than 0
         if (horseName.length < 1 || horseName.length > 18) {
@@ -26,17 +57,18 @@ const EditHorseScreen = ({ navigation, route }) => {
 
         db.transaction((tx) => {
             tx.executeSql(
-                "UPDATE horse SET name=? WHERE id=?;",
-                [horseName, horseId],
+                "UPDATE horse SET name=?, image=? WHERE id=?;",
+                [horseName, image, horseId],
                 (txObj, resultSet) => {
                     console.log("Successful horse update.");
-                    navigation.goBack();
                 },
                 (txObj, error) => {
                     console.log("Failed to update horse: ");
                 }
             );
         });
+
+        navigation.goBack();
     };
 
     return (
@@ -50,6 +82,47 @@ const EditHorseScreen = ({ navigation, route }) => {
                 style={styles.addHorseForm}
                 keyboardShouldPersistTaps="handled"
             >
+                <Text style={{ fontSize: 18, color: "#fff", marginBottom: 4 }}>
+                    Φωτογραφία
+                </Text>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 10,
+                    }}
+                >
+                    <View style={styles.horseImageWrapper}>
+                        {image ? (
+                            <Image
+                                style={styles.horseImage}
+                                source={{ uri: image }}
+                            />
+                        ) : (
+                            <Image
+                                style={styles.horseImage}
+                                source={{ uri: image }}
+                            />
+                        )}
+                    </View>
+                    <View
+                        style={{
+                            flex: 1,
+                            marginLeft: 10,
+                            justifyContent: "space-evenly",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <TextButton
+                            buttonText="Προσθήκη απο κάμερα"
+                            onPress={handleSelectImageFromCamera}
+                        />
+                        <TextButton
+                            buttonText="Προσθήκη απο συλλογή"
+                            onPress={handleSelectImageFromGallery}
+                        />
+                    </View>
+                </View>
                 <TextInput
                     style={styles.textInput}
                     value={horseName}
@@ -118,6 +191,23 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 4,
         paddingHorizontal: 12,
+    },
+    horseImageWrapper: {
+        height: 100,
+        width: 100,
+        justifyContent: "center",
+        textAlign: "center",
+        borderRadius: 12,
+        alignItems: "center",
+        padding: 4,
+        borderWidth: 1,
+        borderColor: "rgba(255, 255, 255, 0.1)",
+    },
+    horseImage: {
+        height: "100%",
+        width: "100%",
+        resizeMode: "cover",
+        borderRadius: 8,
     },
 });
 export default EditHorseScreen;

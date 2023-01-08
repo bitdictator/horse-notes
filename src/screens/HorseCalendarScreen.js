@@ -56,6 +56,7 @@ LocaleConfig.defaultLocale = "gr";
 const HorseCalendarScreen = ({ navigation, route }) => {
     const horseId = route.params.horseId;
     const [horseName, setHorseName] = useState("");
+    const horseImage = route.params.horseImage;
     const [currentCalendarDate, setCurrentCalendarDate] = useState(
         moment().format("YYYY-MM-DD")
     );
@@ -148,6 +149,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
                         navigation.navigate("EditHorse", {
                             horseId: horseId,
                             horseName: horseName,
+                            horseImage: horseImage,
                         });
                     }}
                 />

@@ -48,27 +48,6 @@ const AddHorseScreen = ({ navigation }) => {
         }
     };
 
-    async function ensureDirExists() {
-        try {
-            await FileSystem.makeDirectoryAsync(
-                FileSystem.documentDirectory + "horse-images"
-            );
-        } catch (error) {}
-
-        return true;
-    }
-
-    const saveImage = async () => {
-        ensureDirExists();
-
-        try {
-            await FileSystem.copyAsync({
-                from: image,
-                to: FileSystem.documentDirectory + "horse-images/",
-            });
-        } catch (error) {}
-    };
-
     const handleSave = async () => {
         // validate horse name, must be less than 18 characters and more than 0
         if (horseName.length < 1 || horseName.length > 18) {
@@ -88,8 +67,6 @@ const AddHorseScreen = ({ navigation }) => {
                 }
             );
         });
-
-        saveImage();
 
         navigation.goBack();
     };
