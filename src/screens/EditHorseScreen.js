@@ -82,8 +82,14 @@ const EditHorseScreen = ({ navigation, route }) => {
                 style={styles.addHorseForm}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={{ fontSize: 18, color: "#fff", marginBottom: 4 }}>
-                    Φωτογραφία
+                <Text
+                    style={{
+                        fontSize: 16,
+                        color: "#464646",
+                        marginBottom: 4,
+                    }}
+                >
+                    Προσθηκη φωτογραφίας
                 </Text>
                 <View
                     style={{
