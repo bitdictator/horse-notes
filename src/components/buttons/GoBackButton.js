@@ -5,6 +5,7 @@ const GoBackButton = (props) => {
         <TextButton
             onPress={props.onPress}
             buttonText={props.buttonText ? props.buttonText : "Πίσω"}
+            color={"#06f"}
         />
     );
 };

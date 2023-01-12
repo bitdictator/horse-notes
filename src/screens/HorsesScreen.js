@@ -52,6 +52,7 @@ const HorsesScreen = ({ navigation }) => {
                 <TextButton
                     buttonText="Προσθήκη"
                     onPress={() => navigation.navigate("AddHorse")}
+                    color={"#06f"}
                 />
             </View>
             <FlatList

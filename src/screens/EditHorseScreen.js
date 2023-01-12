@@ -122,10 +122,12 @@ const EditHorseScreen = ({ navigation, route }) => {
                         <TextButton
                             buttonText="Προσθήκη απο κάμερα"
                             onPress={handleSelectImageFromCamera}
+                            color={"#39d353"}
                         />
                         <TextButton
                             buttonText="Προσθήκη απο συλλογή"
                             onPress={handleSelectImageFromGallery}
+                            color={"#39d353"}
                         />
                     </View>
                 </View>
@@ -159,6 +161,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
+        justifyContent: "space-between",
         height: 60,
         padding: 12,
         backgroundColor: "transparent",

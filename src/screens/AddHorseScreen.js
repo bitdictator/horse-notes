@@ -122,10 +122,12 @@ const AddHorseScreen = ({ navigation }) => {
                         <TextButton
                             buttonText="Προσθήκη απο κάμερα"
                             onPress={handleSelectImageFromCamera}
+                            color={"#39d353"}
                         />
                         <TextButton
                             buttonText="Προσθήκη απο συλλογή"
                             onPress={handleSelectImageFromGallery}
+                            color={"#39d353"}
                         />
                     </View>
                 </View>

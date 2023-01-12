@@ -144,7 +144,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
                 <GoBackButton onPress={() => navigation.goBack()} />
                 <Text style={styles.headerTitle}>{horseName}</Text>
                 <TextButton
-                    buttonText={"Επεξ..."}
+                    buttonText={"Επεξ."}
                     onPress={() => {
                         navigation.navigate("EditHorse", {
                             horseId: horseId,
@@ -152,6 +152,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
                             horseImage: horseImage,
                         });
                     }}
+                    color={"#06f"}
                 />
             </View>
             <View style={styles.pageContentWrapper}>
