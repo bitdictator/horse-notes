@@ -16,7 +16,13 @@ const HorseCard = (props) => {
         >
             <Image
                 style={styles.horseImg}
-                source={{ uri: props.imageSource }}
+                source={
+                    props.imageSource === ""
+                        ? require("../../../assets/horse-image.png")
+                        : {
+                              uri: props.imageSource,
+                          }
+                }
             />
             <Text style={styles.buttonText}>{props.horseName}</Text>
         </Pressable>

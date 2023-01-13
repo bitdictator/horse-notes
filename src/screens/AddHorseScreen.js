@@ -21,7 +21,7 @@ const db = SQLite.openDatabase("thomas-horse-notes.db");
 
 const AddHorseScreen = ({ navigation }) => {
     const [horseName, setHorseName] = useState("");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState("");
 
     const handleSelectImageFromCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
@@ -58,7 +58,7 @@ const AddHorseScreen = ({ navigation }) => {
         db.transaction((tx) => {
             tx.executeSql(
                 "INSERT INTO horse (name, image) VALUES (?, ?);",
-                [horseName, image],
+                [horseName.trim(), image],
                 (txObj, resultSet) => {
                     console.log("Successful horse insert.");
                 },
@@ -107,7 +107,7 @@ const AddHorseScreen = ({ navigation }) => {
                         ) : (
                             <Image
                                 style={styles.horseImage}
-                                source={require("../../assets/image_icon_outline.png")}
+                                source={require("../../assets/horse-image.png")}
                             />
                         )}
                     </View>

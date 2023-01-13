@@ -7,13 +7,14 @@ import {
     TextInput,
     ScrollView,
     Image,
+    Modal,
+    KeyboardAvoidingView,
 } from "react-native";
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
 import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -23,6 +24,8 @@ const EditHorseScreen = ({ navigation, route }) => {
     const [horseName, setHorseName] = useState(route.params.horseName);
     const horseId = route.params.horseId;
     const [image, setImage] = useState(route.params.horseImage);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [horseNameVerify, setHorseNameVerify] = useState("");
 
     const handleSelectImageFromCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
@@ -46,6 +49,7 @@ const EditHorseScreen = ({ navigation, route }) => {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
+            console.log(result.assets[0].uri);
         }
     };
 
@@ -58,7 +62,7 @@ const EditHorseScreen = ({ navigation, route }) => {
         db.transaction((tx) => {
             tx.executeSql(
                 "UPDATE horse SET name=?, image=? WHERE id=?;",
-                [horseName, image, horseId],
+                [horseName.trim(), image, horseId],
                 (txObj, resultSet) => {
                     console.log("Successful horse update.");
                 },
@@ -71,12 +75,69 @@ const EditHorseScreen = ({ navigation, route }) => {
         navigation.goBack();
     };
 
+    const handleDelete = () => {
+        // first check if name typed correctly
+        if (horseNameVerify !== horseName) {
+            return;
+        }
+
+        db.transaction((tx) => {
+            // delete notes
+            tx.executeSql(
+                "DELETE FROM note WHERE horse_id=?;",
+                [horseId],
+                (txObj, resultSet) => {
+                    console.log(
+                        "Successfully deleted notes of horse with id: ",
+                        horseId
+                    );
+                },
+                (txObj, error) => {
+                    console.log(
+                        "Failed to delete notes of horse with id: ",
+                        horseId
+                    );
+                }
+            );
+            // delete horses
+            tx.executeSql(
+                "DELETE FROM horse WHERE id=?;",
+                [horseId],
+                (txObj, resultSet) => {
+                    console.log(
+                        "Successfully deleted horse with id: ",
+                        horseId
+                    );
+                },
+                (txObj, error) => {
+                    console.log("Failed to delete horse with id: ", horseId);
+                }
+            );
+        });
+
+        navigation.popToTop();
+    };
+
+    const toggleDeleteHorseModal = () => {
+        setDeleteModalVisible(!deleteModalVisible);
+
+        // if togglede to false, clean the horse name verify
+        if (!deleteModalVisible) {
+            setHorseNameVerify("");
+        }
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar style="light" backgroundColor={APP_BACKGROUND_COLOR} />
             <View style={styles.header}>
                 <GoBackButton onPress={navigation.goBack} />
                 <Text style={styles.headerTitle}>Επεξεργασία αλόγου</Text>
+                <TextButton
+                    buttonText={"Διαγ."}
+                    color={"#da3633"}
+                    onPress={toggleDeleteHorseModal}
+                />
             </View>
             <ScrollView
                 style={styles.addHorseForm}
@@ -99,7 +160,7 @@ const EditHorseScreen = ({ navigation, route }) => {
                     }}
                 >
                     <View style={styles.horseImageWrapper}>
-                        {image ? (
+                        {image !== "" ? (
                             <Image
                                 style={styles.horseImage}
                                 source={{ uri: image }}
@@ -107,7 +168,7 @@ const EditHorseScreen = ({ navigation, route }) => {
                         ) : (
                             <Image
                                 style={styles.horseImage}
-                                source={{ uri: image }}
+                                source={require("../../assets/horse-image.png")}
                             />
                         )}
                     </View>
@@ -146,6 +207,64 @@ const EditHorseScreen = ({ navigation, route }) => {
             <View style={styles.footer}>
                 <BlueButton onPress={handleSave} buttonText="Αποθήκευση" />
             </View>
+            <Modal
+                animationType="none"
+                onDismiss={toggleDeleteHorseModal}
+                onRequestClose={toggleDeleteHorseModal}
+                statusBarTranslucent={true}
+                transparent={true}
+                visible={deleteModalVisible}
+            >
+                <KeyboardAvoidingView
+                    behavior="height"
+                    style={{
+                        flex: 1,
+                        width: "100%",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        justifyContent: "flex-end",
+                    }}
+                >
+                    <View style={styles.deleteHorseModal}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>
+                                Διαγραφή αλόγου
+                            </Text>
+                            <TextButton
+                                buttonText="Ακύρωση"
+                                color="#06f"
+                                onPress={toggleDeleteHorseModal}
+                            />
+                        </View>
+                        <Text
+                            style={{
+                                fontSize: 16,
+                                color: "#464646",
+                                marginBottom: 4,
+                            }}
+                        >
+                            Πληκτρολογήστε το όνομα του αλόγου για να το
+                            διαγράψετε
+                        </Text>
+                        <View style={styles.modalContent}>
+                            <TextInput
+                                style={[styles.textInput, { marginBottom: 20 }]}
+                                value={horseNameVerify}
+                                autoComplete="off"
+                                autoCorrect={false}
+                                autoFocus={false}
+                                selectionColor="#06f"
+                                placeholder="Όνομα"
+                                placeholderTextColor="#464646"
+                                onChangeText={setHorseNameVerify}
+                            />
+                            <BlueButton
+                                onPress={handleDelete}
+                                buttonText="Διαγραφή"
+                            />
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+            </Modal>
         </View>
     );
 };
@@ -218,5 +337,26 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         borderRadius: 8,
     },
+    deleteHorseModal: {
+        width: "100%",
+        padding: 18,
+        backgroundColor: APP_BACKGROUND_COLOR,
+        borderTopLeftRadius: 18,
+        borderTopRightRadius: 18,
+    },
+    modalHeader: {
+        flexDirection: "row",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "transparent",
+        marginBottom: 10,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#fff",
+    },
+    modalContent: {},
 });
 export default EditHorseScreen;
