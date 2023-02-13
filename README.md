@@ -1,8 +1,8 @@
 # Horse Notes
 A simple React Native note taking app for your horses
 
-#### You can ####
+## You can
 * Add and edit your horses
-* Take notes for your horse and store it in the calendar
-* Create a note and store it for multiple horses and once
+* Take horse training or general notes for your horses and save them in the calendar
+* Take notes for multiple horses at once
 * Share the note with someone (Could be an employee) in social media
