@@ -14,7 +14,7 @@ import * as SQLite from "expo-sqlite";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("thomas-horse-notes.db");
+const db = SQLite.openDatabase("horse-notes-app.db");
 
 const HorseNoteScreen = ({ navigation, route }) => {
     const horseId = route.params.horseId;

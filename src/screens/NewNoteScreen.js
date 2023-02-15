@@ -16,7 +16,7 @@ import HorseCheckbox from "../components/buttons/HorseCheckbox";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("thomas-horse-notes.db");
+const db = SQLite.openDatabase("horse-notes-app.db");
 
 const NewNoteScreen = ({ navigation, route }) => {
     const noteDate = route.params.noteDate;
@@ -156,7 +156,7 @@ const NewNoteScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         if (isFocused) {
-            const db = SQLite.openDatabase("thomas-horse-notes.db");
+            const db = SQLite.openDatabase("horse-notes-app.db");
             // get horses
             db.transaction((tx) => {
                 tx.executeSql(

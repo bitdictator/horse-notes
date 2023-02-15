@@ -28,7 +28,7 @@ const HorsesScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (isFocused) {
-            const db = SQLite.openDatabase("thomas-horse-notes.db");
+            const db = SQLite.openDatabase("horse-notes-app.db");
             // get horses
             db.transaction((tx) => {
                 tx.executeSql(

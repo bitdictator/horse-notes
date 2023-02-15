@@ -13,7 +13,7 @@ import * as SQLite from "expo-sqlite";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    const db = SQLite.openDatabase("thomas-horse-notes.db");
+    const db = SQLite.openDatabase("horse-notes-app.db");
 
     // init tables
     db.transaction((tx) => {

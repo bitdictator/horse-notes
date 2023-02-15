@@ -64,7 +64,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
 
     const updateMarkedDates = (currentCalendarDate) => {
-        const db = SQLite.openDatabase("thomas-horse-notes.db");
+        const db = SQLite.openDatabase("horse-notes-app.db");
         // get notes for this horse and this month of this year
         db.transaction((tx) => {
             tx.executeSql(
@@ -112,7 +112,7 @@ const HorseCalendarScreen = ({ navigation, route }) => {
     };
 
     const getHorseName = () => {
-        const db = SQLite.openDatabase("thomas-horse-notes.db");
+        const db = SQLite.openDatabase("horse-notes-app.db");
         // get horses
         db.transaction((tx) => {
             tx.executeSql(
