@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "horse-notes",
+    "name": "HorseNotes",
     "slug": "horse-notes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark mode",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0f0f0f"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -20,11 +20,17 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#0f0f0f"
+      },
+      "package": "com.lextosounidis.horsenotes"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9e807b4c-a9a0-4f2c-aa3c-ec5cc7d9e1d0"
+      }
     }
   }
 }
