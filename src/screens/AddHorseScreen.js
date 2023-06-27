@@ -14,10 +14,10 @@ import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import { db } from "../database/database.js";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("horse-notes-app.db");
 
 const AddHorseScreen = ({ navigation }) => {
     const [horseName, setHorseName] = useState("");

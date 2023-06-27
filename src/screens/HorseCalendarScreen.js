@@ -6,6 +6,7 @@ import GoBackButton from "../components/buttons/GoBackButton";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import * as SQLite from "expo-sqlite";
 import moment from "moment";
+import { db } from "../database/database.js";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
@@ -64,7 +65,6 @@ const HorseCalendarScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
 
     const updateMarkedDates = (currentCalendarDate) => {
-        const db = SQLite.openDatabase("horse-notes-app.db");
         // get notes for this horse and this month of this year
         db.transaction((tx) => {
             tx.executeSql(
@@ -112,7 +112,6 @@ const HorseCalendarScreen = ({ navigation, route }) => {
     };
 
     const getHorseName = () => {
-        const db = SQLite.openDatabase("horse-notes-app.db");
         // get horses
         db.transaction((tx) => {
             tx.executeSql(

@@ -15,10 +15,10 @@ import GoBackButton from "../components/buttons/GoBackButton";
 import TextButton from "../components/buttons/TextButton";
 import * as SQLite from "expo-sqlite";
 import * as ImagePicker from "expo-image-picker";
+import { db } from "../database/database.js";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("horse-notes-app.db");
 
 const EditHorseScreen = ({ navigation, route }) => {
     const [horseName, setHorseName] = useState(route.params.horseName);

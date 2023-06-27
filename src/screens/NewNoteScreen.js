@@ -13,10 +13,10 @@ import GoBackButton from "../components/buttons/GoBackButton";
 import * as SQLite from "expo-sqlite";
 import { useIsFocused } from "@react-navigation/native";
 import HorseCheckbox from "../components/buttons/HorseCheckbox";
+import { db } from "../database/database.js";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("horse-notes-app.db");
 
 const NewNoteScreen = ({ navigation, route }) => {
     const noteDate = route.params.noteDate;
@@ -156,7 +156,6 @@ const NewNoteScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         if (isFocused) {
-            const db = SQLite.openDatabase("horse-notes-app.db");
             // get horses
             db.transaction((tx) => {
                 tx.executeSql(

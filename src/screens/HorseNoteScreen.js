@@ -11,10 +11,10 @@ import {
 import BlueButton from "../components/buttons/BlueButton";
 import GoBackButton from "../components/buttons/GoBackButton";
 import * as SQLite from "expo-sqlite";
+import { db } from "../database/database.js";
 
 const APP_BACKGROUND_COLOR = "#0f0f0f";
 const DIVIDER_COLOR = "rgba(255, 255, 255, 0.1)";
-const db = SQLite.openDatabase("horse-notes-app.db");
 
 const HorseNoteScreen = ({ navigation, route }) => {
     const horseId = route.params.horseId;

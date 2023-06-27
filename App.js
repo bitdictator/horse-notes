@@ -8,33 +8,13 @@ import NewNoteScreen from "./src/screens/NewNoteScreen";
 import EditHorseScreen from "./src/screens/EditHorseScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as SQLite from "expo-sqlite";
+import { initDB } from "./src/database/database";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    const db = SQLite.openDatabase("horse-notes-app.db");
-
-    // init tables
-    db.transaction((tx) => {
-        // init horse table
-        tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS horse (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, image TEXT NOT NULL)",
-            [],
-            (txObj, resulSet) => console.log("Created 'horse' table."),
-            (txObj, error) =>
-                console.log("Failed to create 'horse' table: ", error)
-        );
-
-        // init note table
-        tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS note (id INTEGER PRIMARY KEY AUTOINCREMENT, horse_id INTEGER, date TEXT NOT NULL, note TEXT NOT NULL, FOREIGN KEY(horse_id) REFERENCES horse(id))",
-            [],
-            (txObj, resulSet) => console.log("Created 'note' table."),
-            (txObj, error) =>
-                console.log("Failed to create 'note' table: ", error)
-        );
-    });
+    // Initialize the database
+    initDB();
 
     return (
         <NavigationContainer>
